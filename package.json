@@ -1,0 +1,25 @@
+{
+  "name": "fluxo-logistico",
+  "version": "1.0.0",
+  "description": "Sistema WEB Mobile-First para gestão operacional logística e programação de cargas.",
+  "homepage": "https://github.com/ThiagoMoura963/fluxo-logistico#readme",
+  "bugs": {
+    "url": "https://github.com/ThiagoMoura963/fluxo-logistico/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ThiagoMoura963/fluxo-logistico.git"
+  },
+  "license": "MIT",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev"
+  },
+  "dependencies": {
+    "next": "^16.2.6",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
+  }
+}
