@@ -28,4 +28,3 @@ O foco principal do projeto é reduzir retrabalho operacional, automatizar proce
 - PostgreSQL
 - TailwindCSS
 - Evolution API
-
