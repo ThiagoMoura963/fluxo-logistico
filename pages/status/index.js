@@ -32,8 +32,10 @@ function DatabaseStatus() {
 
   const database = data?.dependencies?.database;
 
-  const usagePercent = Math.round(
-    (database?.opened_connections / database?.max_connections) * 100,
+  const usagePercent = parseFloat(
+    ((database?.opened_connections / database?.max_connections) * 100).toFixed(
+      2,
+    ),
   );
 
   return (
