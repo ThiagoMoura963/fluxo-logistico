@@ -64,7 +64,6 @@ async function update(username, userInputValues) {
   const currentUser = await findOneByUsername(username);
 
   if ("email" in userInputValues) {
-    console.log("userInputValues:", currentUser);
     await validadeUniqueEmail(userInputValues.email);
   }
 
