@@ -7,6 +7,7 @@ describe("models/activation", () => {
         "create:session",
         "read:session",
         "update:user",
+        "create:warehouse_schedule",
       ]);
     });
   });
