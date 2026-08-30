@@ -22,6 +22,10 @@ const availableFeatures = [
   //STATUS
   "read:status",
   "read:status:all",
+
+  //WAREHOUSE_SCHEDULE
+  "create:warehouse_schedule",
+  "read:warehouse_schedule",
 ];
 
 function can(user, feature, resource) {
@@ -124,6 +128,27 @@ function filterOutput(user, feature, resource) {
     }
 
     return output;
+  }
+
+  if (feature === "read:warehouse_schedule") {
+    return {
+      id: resource.id,
+      schedule_date: resource.schedule_date
+        ? resource.schedule_date.toISOString().split("T")[0]
+        : null,
+      schedule_time: resource.schedule_time,
+      client: resource.client,
+      booking: resource.booking,
+      inspectorate: resource.inspectorate,
+      operation_type: resource.operation_type,
+      commodity: resource.commodity,
+      quantity: resource.quantity,
+      completed: resource.completed,
+      balance: resource.balance,
+      notes: resource.notes,
+      created_at: resource.created_at,
+      updated_at: resource.updated_at,
+    };
   }
 }
 

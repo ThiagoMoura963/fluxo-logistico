@@ -7,7 +7,12 @@ import authorization from "./authorization.js";
 
 const EXPIRATION_IN_MILLISECONDS = 60 * 15 * 1000;
 
-const ACTIVATION_FEATURES = ["create:session", "read:session", "update:user"];
+const ACTIVATION_FEATURES = [
+  "create:session",
+  "read:session",
+  "update:user",
+  "create:warehouse_schedule",
+];
 
 async function create(userId) {
   const expiresAt = new Date(Date.now() + EXPIRATION_IN_MILLISECONDS);

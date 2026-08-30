@@ -18,6 +18,12 @@ const defaultSchema = Joi.object().label("body").required().min(1).messages({
     '{#label} deve conter no máximo {#limit} {if(#limit==1, "caractere", "caracteres")}.',
   "string.min":
     '{#label} deve conter no mínimo {#limit} {if(#limit==1, "caractere", "caracteres")}.',
+  "string.pattern.base": "{#label} possui um formato inválido.",
+  "date.base": "{#label} deve ser uma data válida.",
+  "date.format": "{#label} deve estar em um formato de data válido.",
+  "number.base": "{#label} deve ser do tipo Number.",
+  "number.integer": "{#label} deve ser um número inteiro.",
+  "number.min": "{#label} deve ser no mínimo {#limit}.",
 });
 
 const schemas = {
@@ -37,6 +43,30 @@ const schemas = {
   username: Joi.string().alphanum().min(3).max(30).trim().required(),
 
   session_id: Joi.string().length(96).alphanum().required(),
+
+  schedule_date: Joi.string()
+    .pattern(/^\d{4}-\d{2}-\d{2}$/)
+    .required(),
+
+  schedule_time: Joi.string()
+    .pattern(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/)
+    .allow(null),
+
+  client: Joi.string().max(100).trim().required(),
+
+  booking: Joi.string().max(100).trim().allow(null),
+
+  inspectorate: Joi.string().max(255).trim().allow(null),
+
+  operation_type: Joi.string().max(100).trim().required(),
+
+  commodity: Joi.string().max(255).trim().required(),
+
+  quantity: Joi.number().integer().min(0).required(),
+
+  completed: Joi.number().integer().min(0).default(0),
+
+  notes: Joi.string().trim().allow(null),
 };
 
 export default function validator(object, keys) {
