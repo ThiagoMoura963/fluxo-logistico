@@ -1,4 +1,5 @@
 import database from "infra/database";
+import { ValidationError } from "infra/errors.js";
 
 async function create(warehouseScheduleInputValues) {
   const newWarehouseSchedule = await runInsertQuery(
@@ -8,6 +9,8 @@ async function create(warehouseScheduleInputValues) {
   return newWarehouseSchedule;
 
   async function runInsertQuery(warehouseScheduleInputValues) {
+    await validateUniqueActiveBooking(warehouseScheduleInputValues.booking);
+
     const results = await database.query({
       text: `
         INSERT INTO warehouse_schedules (
@@ -51,6 +54,31 @@ async function create(warehouseScheduleInputValues) {
     });
 
     return results.rows[0];
+  }
+}
+
+async function validateUniqueActiveBooking(booking) {
+  const results = await database.query({
+    text: `
+      SELECT
+        booking
+      FROM
+        warehouse_schedules
+      WHERE
+        booking = $1
+        AND completed < quantity 
+      ;`,
+    values: [booking],
+  });
+
+  if (results.rowCount > 0) {
+    throw new ValidationError({
+      message:
+        "O booking informada já está vinculado a uma programação em andamento.",
+      action:
+        "Aguarde a conclusão da programação atual para utilizar este booking novamente.",
+      key: "booking",
+    });
   }
 }
 

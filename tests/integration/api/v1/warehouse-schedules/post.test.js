@@ -366,6 +366,74 @@ describe("POST /api/v1/warehouse-schedules", () => {
       });
     });
 
+    test("With `booking` already in an active warehouse schedule", async () => {
+      const createdUser = await orchestrator.createUser();
+      const activatedUser = await orchestrator.activateUser(createdUser.id);
+      const sessionObject = await orchestrator.createSession(activatedUser.id);
+
+      const response1 = await fetch(
+        `${webserver.origin}/api/v1/warehouse-schedules`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Cookie: `session_id=${sessionObject.token}`,
+          },
+          body: JSON.stringify({
+            schedule_date: "2026-08-20",
+            schedule_time: "15:00:00",
+            client: "Cliente Teste",
+            booking: "DEF456",
+            inspectorate: "Receita Federal",
+            operation_type: "Cross",
+            commodity: "Algodão",
+            quantity: 100,
+            completed: 0,
+            notes: "Primeira programação",
+          }),
+        },
+      );
+
+      expect(response1.status).toBe(201);
+
+      const response2 = await fetch(
+        `${webserver.origin}/api/v1/warehouse-schedules`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Cookie: `session_id=${sessionObject.token}`,
+          },
+          body: JSON.stringify({
+            schedule_date: "2026-08-21",
+            schedule_time: "16:00:00",
+            client: "Outro Cliente",
+            booking: "DEF456",
+            inspectorate: "Receita Federal",
+            operation_type: "Cross",
+            commodity: "Algodão",
+            quantity: 50,
+            completed: 0,
+            notes: "Segunda programação",
+          }),
+        },
+      );
+
+      expect(response2.status).toBe(400);
+
+      const response2Body = await response2.json();
+
+      expect(response2Body).toEqual({
+        name: "ValidationError",
+        message:
+          "O booking informada já está vinculado a uma programação em andamento.",
+        action:
+          "Aguarde a conclusão da programação atual para utilizar este booking novamente.",
+        status_code: 400,
+        key: "booking",
+      });
+    });
+
     test("With empty `operation_type`", async () => {
       const createdUser = await orchestrator.createUser();
       const activatedUser = await orchestrator.activateUser(createdUser.id);
